@@ -8,43 +8,65 @@
 
 import UIKit
 
+enum CurrentLight {
+    case red, yellow, green
+}
+
 class ViewController: UIViewController {
-    @IBOutlet weak var redColorLabel: UIView!
-    @IBOutlet weak var yellowColorLabel: UIView!
-    @IBOutlet weak var greenColorLabel: UIView!
-    @IBOutlet weak var startButtonLabel: UIButton!
+    @IBOutlet weak var redView: UIView!
+    @IBOutlet weak var yellowView: UIView!
+    @IBOutlet weak var greenView: UIView!
+    @IBOutlet weak var buttonOutlet: UIButton!
+    
+    private var currentLight = CurrentLight.red
+    
+    private let lightIsOn: CGFloat = 1
+    private let lightIsOff: CGFloat = 0.3
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        redColorLabel.alpha = 0.3
-        redColorLabel.layer.cornerRadius = 50
-        
-        yellowColorLabel.alpha = 0.3
-        yellowColorLabel.layer.cornerRadius = 50
-        
-        greenColorLabel.alpha = 0.3
-        greenColorLabel.layer.cornerRadius = 50
+        setDafault()
     }
-
-    @IBAction func startButtonAction() {
+    
+    override func viewWillLayoutSubviews() {
         
-        if redColorLabel.alpha < 1 {
-            redColorLabel.alpha = 1
-            startButtonLabel.setTitle("NEXT", for: .normal)
+        cornerRadius()
+    }
+    
+    @IBAction func buttonAction() {
+        
+        buttonOutlet.setTitle("NEXT", for: .normal)
+        
+        switch currentLight {
             
-        } else if yellowColorLabel.alpha < 1{
-            yellowColorLabel.alpha = 1
-            
-        } else if greenColorLabel.alpha < 1 {
-            greenColorLabel.alpha = 1
-            
-        } else if greenColorLabel.alpha == 1 {
-            redColorLabel.alpha = 0.3
-            yellowColorLabel.alpha = 0.3
-            greenColorLabel.alpha = 0.3
-            startButtonLabel.setTitle("Start", for: .normal)
+        case .red:
+            greenView.alpha = lightIsOff
+            redView.alpha = lightIsOn
+            currentLight = .yellow
+        case .yellow:
+            redView.alpha = lightIsOff
+            yellowView.alpha = lightIsOn
+            currentLight = .green
+        case .green:
+            greenView.alpha = lightIsOn
+            yellowView.alpha = lightIsOff
+            currentLight = .red
         }
     }
+    
+    private func setDafault() {
+        
+        buttonOutlet.layer.cornerRadius = 10
+        
+        redView.alpha = lightIsOff
+        yellowView.alpha = lightIsOff
+        greenView.alpha = lightIsOff
+    }
+    
+    private func cornerRadius() {
+        redView.layer.cornerRadius = redView.frame.width / 2
+        yellowView.layer.cornerRadius = yellowView.frame.width / 2
+        greenView.layer.cornerRadius = greenView.frame.width / 2
+    }
 }
-
